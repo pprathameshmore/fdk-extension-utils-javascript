@@ -3,7 +3,7 @@ class InterfaceError extends Error {
         super(message);
     }
 }
- 
+
 module.exports = {
     InterfaceError
 };

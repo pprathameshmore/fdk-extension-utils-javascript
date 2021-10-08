@@ -1,10 +1,11 @@
+
 class Price {
     constructor(obj) {
         this.amount = obj.amount;
         this.currency = obj.currency;
     }
 }
- 
+
 class Plan {
     constructor(obj) {
         this.id = (obj.id || obj._id).toString();
@@ -20,5 +21,5 @@ class Plan {
         this.meta = obj.meta;
     }
 }
- 
+
 module.exports = Plan;

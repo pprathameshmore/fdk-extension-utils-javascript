@@ -1,7 +1,7 @@
 const { OrmType } = require("./helpers/constants");
 const Plan = require("./models/entities/plan");
 const Subscription = require("./models/entities/subscription");
- 
+
 function setupBilling(config) {
     if(!config) {
         throw Error("Missing config for setup");
@@ -24,7 +24,7 @@ function setupBilling(config) {
     if (!Object.values(OrmType).includes(config.orm_type)) {
         throw Error(`\`orm_type\` value is invalid. Allowed values are: ${Object.values(OrmType).join(", ")}`);
     }
- 
+
     const models = require("./models")(config.db_connection, config.collection_name, config.orm_type);
     const { getActivePlans, subscribePlan, getActiveSubscription, updateSubscriptionStatus } = require("./controllers/subscription.helper")(config, models);
     return {
@@ -36,7 +36,7 @@ function setupBilling(config) {
         updateSubscriptionStatus
     }
 }
- 
+
 module.exports = {
     setupBilling,
     OrmType,

@@ -11,5 +11,5 @@ class Subscription {
         this.meta = obj.meta;
     }
 }
- 
+
 module.exports = Subscription;

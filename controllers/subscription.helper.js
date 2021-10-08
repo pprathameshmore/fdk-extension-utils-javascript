@@ -1,22 +1,22 @@
-use strict';
- 
+'use strict';
+
 module.exports = (config, models) => {
- 
+
     const {
         subscriptionModel,
         planModel
     } = models;
- 
+
     async function getActiveSubscription(companyId) {
         companyId = Number(companyId);
         const sellerSubscription = await subscriptionModel.getActiveSubscription(companyId);
- 
+
         if (!sellerSubscription) {
             return null;
         }
         return sellerSubscription;
     };
- 
+
     async function subscribePlan(companyId, planId, platformClient, callbackUrl) {
         companyId = Number(companyId);
         const plan = await planModel.getPlanById(planId);
@@ -51,7 +51,7 @@ module.exports = (config, models) => {
             redirect_url: response.confirm_url
         }
     };
- 
+
     async function updateSubscriptionStatus(companyId, subscriptionId, platformClient) {
             let success = false;
             let message = "";
@@ -96,14 +96,14 @@ module.exports = (config, models) => {
                 message: message
             };
     };
- 
+
     async function getActivePlans(companyId) {
         const plans = await planModel.getActivePlans(companyId);
         return { 
             plans: plans 
         };
     }
- 
+
     return {
         getActivePlans,
         subscribePlan,
