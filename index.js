@@ -1,4 +1,6 @@
 const { OrmType } = require("./helpers/constants");
+const Plan = require("./models/entities/plan");
+const Subscription = require("./models/entities/subscription");
  
 function setupBilling(config) {
     if(!config) {
@@ -37,5 +39,7 @@ function setupBilling(config) {
  
 module.exports = {
     setupBilling,
-    OrmType
+    OrmType,
+    Plan,
+    Subscription
 }
