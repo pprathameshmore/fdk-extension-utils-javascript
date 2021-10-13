@@ -52,28 +52,28 @@ module.exports = (config, models) => {
         }
     };
 
-    async function updateSubscriptionStatus(companyId, subscriptionId, platformClient) {
+    async function updateSubscriptionStatus(companyId, platformSubscriptionId, platformClient) {
             let success = false;
             let message = "";
             companyId = Number(companyId);
-            const sellerSubscription = await subscriptionModel.getSubscriptionByPlatformId(subscriptionId, companyId);
+            const sellerSubscription = await subscriptionModel.getSubscriptionByPlatformId(platformSubscriptionId, companyId);
             const existingSubscription = await subscriptionModel.getActiveSubscription(companyId);
             if (!sellerSubscription) {
                 return {
                     success: success,
                     seller_subscription: sellerSubscription,
-                    message: `Subscription not found with id ${subscriptionId}`
+                    message: `Subscription not found with id ${platformSubscriptionId}`
                 }
             }
             const platformSubscriptionData = await platformClient.billing.getSubscriptionCharge({
                 "extensionId": config.extension_id,
-                "subscriptionId": sellerSubscription.platform_subscription_id.toString()
+                "platformSubscriptionId": sellerSubscription.platform_subscription_id.toString()
             });
             if (!platformSubscriptionData) {
                 return {
                     success: success,
                     seller_subscription: sellerSubscription,
-                    message: `Subscription not found on Fynd Platform with id ${subscriptionId}`
+                    message: `Subscription not found on Fynd Platform with id ${platformSubscriptionId}`
                 }
             }
             sellerSubscription.status = platformSubscriptionData.status;

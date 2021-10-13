@@ -93,7 +93,7 @@ Returns: [Subscription](#Subscription)
 
 ```javascript
 
-async function updateSubscriptionStatus(companyId, subscriptionId, platformClient) {
+async function updateSubscriptionStatus(companyId, platformSubscriptionId, platformClient) {
     ...
 }
 
