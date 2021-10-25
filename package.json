@@ -38,13 +38,16 @@
   "license": "ISC",
   "dependencies": {
     "deep-extend": "^0.6.0",
-    "joi": "^17.4.2",
-    "mongoose": "^5.11.17"
+    "joi": "^17.4.2"
+  },
+  "peerDependencies": {
+    "mongoose": ">=5.11.17"
   },
   "devDependencies": {
     "winston": "^3.2.1",
     "jasmine": "^3.5.0",
     "jasmine-console-reporter": "^3.1.0",
-    "nyc": "^15.0.1"
+    "nyc": "^15.0.1",
+    "mongoose": "^5.11.17"
   }
 }
