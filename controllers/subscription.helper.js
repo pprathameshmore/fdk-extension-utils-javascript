@@ -34,7 +34,7 @@ module.exports = (config, models) => {
                         },
                         pricing_type: 'recurring',
                         recurring: {
-                            interval: plan.yearly_plan ? 'year' : 'month'
+                            interval: plan.interval
                         }
                     }
                 ],

@@ -9,7 +9,7 @@ module.exports = {
         "Feature 2",
         "Feature 3",
     ],
-    "yearly_plan" : false,
+    "interval" : "year",
     "name" : "Standard",
     "tagline": "test tagline"
 }

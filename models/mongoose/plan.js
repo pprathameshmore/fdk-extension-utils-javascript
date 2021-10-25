@@ -5,46 +5,48 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const BasePlanModel = require("../base-models/base_plan_model");
 const Plan = require("../entities/plan");
+const { PlanInterval } = require("../../helpers/constants");
+
+const schema = new mongoose.Schema({
+    name: {
+        type: String
+    },
+    tagline: {
+        type: String
+    },
+    company_id: {
+        type: [Number],
+        required: false
+    },
+    is_active: {
+        type: Boolean,
+        default: true
+    },
+    price: {
+        amount: Number,
+        currency: {
+            type: String,
+            default: "INR"
+        }
+    },
+    features: [String],
+    interval: {
+        type: String,
+        enums: Object.values(PlanInterval)
+    },
+    meta: {
+        type: Object
+    }
+}, {
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
+});
 
 class PlanModel extends BasePlanModel {
     constructor(connection, collectionName) {
         super(connection, collectionName);
-        const schema = new mongoose.Schema({
-            name: {
-                type: String
-            },
-            tagline: {
-                type: String
-            },
-            company_id: {
-                type: [Number],
-                required: false
-            },
-            is_active: {
-                type: Boolean,
-                default: true
-            },
-            price: {
-                amount: Number,
-                currency: {
-                    type: String,
-                    default: "INR"
-                }
-            },
-            features: [String],
-            yearly_plan: {
-                type: Boolean,
-                default: false
-            },
-            meta: {
-                type: Object
-            }
-        }, {
-            timestamps: {
-                createdAt: 'created_at',
-                updatedAt: 'updated_at'
-            }
-        });
 
         this.model = connection.model(collectionName, schema, collectionName);
     }

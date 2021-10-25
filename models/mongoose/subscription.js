@@ -7,43 +7,44 @@ const { omit } = require("../../helpers/common");
 const Subscription = require("../entities/subscription");
 const BaseSubscriptionModel = require("../base-models/base_subscription_model");
 
+const schema = new Schema({
+    company_id: {
+        type: Number,
+        required: true,
+        immutable: true
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ["pending", "active", "cancelled"]
+    },
+    platform_subscription_id: {
+        type: ObjectId,
+        required: true
+    },
+    plan_id: {
+        type: ObjectId,
+        required: true
+    },
+    activated_on: {
+        type: Date
+    },
+    cancelled_on: {
+        type: Date
+    },
+    meta: {
+        type: Object
+    }
+}, {
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
+});
+
 class SubscriptionModel extends BaseSubscriptionModel{
     constructor(connection, collectionName) {
         super(connection, collectionName);
-        const schema = new Schema({
-            company_id: {
-                type: Number,
-                required: true,
-                immutable: true
-            },
-            status: {
-                type: String,
-                required: true,
-                enum: ["pending", "active", "cancelled"]
-            },
-            platform_subscription_id: {
-                type: ObjectId,
-                required: true
-            },
-            plan_id: {
-                type: ObjectId,
-                required: true
-            },
-            activated_on: {
-                type: Date
-            },
-            cancelled_on: {
-                type: Date
-            },
-            meta: {
-                type: Object
-            }
-        }, {
-            timestamps: {
-                createdAt: 'created_at',
-                updatedAt: 'updated_at'
-            }
-        });
 
         this.model = connection.model(collectionName, schema, collectionName);
     }
