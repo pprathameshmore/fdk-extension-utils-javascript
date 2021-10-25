@@ -4,6 +4,13 @@ class InterfaceError extends Error {
     }
 }
 
+class EntityCastError extends Error {
+    constructor(error) {
+        super(error.details.map(err=>err.message).join(", "));
+    }
+}
+
 module.exports = {
-    InterfaceError
+    InterfaceError,
+    EntityCastError
 };

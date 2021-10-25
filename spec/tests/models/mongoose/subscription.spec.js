@@ -5,6 +5,7 @@ const { clearData } = require("../../../helpers/setup_db");
 const subscriptionFixture = require("../../../fixtures/subscription");
 const ObjectId = require("mongoose").Types.ObjectId;
 const Subscription = require("../../../../models/entities/subscription");
+const { EntityCastError } = require("../../../../helpers/errors");
 
 describe("Subscription mongoose model", () => {
 
@@ -39,5 +40,22 @@ describe("Subscription mongoose model", () => {
         const data = await this.fdk_billing_instance.subscriptionModel.updateSubscription({...subscriptionFixture, meta: {"test_key": true}});
         expect(data instanceof Subscription).toBeTrue();
         expect(data.meta.test_key).toBeTrue();
+    });
+
+    it("Invalid subscription object error", async () => {
+        let parsingFailed = false;
+        try {
+            let subscriptionInstance = new Subscription({
+                ...subscriptionFixture,
+                id: "abc",
+                plan_id: 123
+            });
+        }
+        catch(err) {
+            if (err instanceof EntityCastError) {
+                parsingFailed = true;
+            }
+        }
+        expect(parsingFailed).toBeTrue();
     });
 });

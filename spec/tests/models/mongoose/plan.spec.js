@@ -5,6 +5,7 @@ const { clearData } = require("../../../helpers/setup_db");
 const planFixture = require("../../../fixtures/plan");
 const ObjectId = require("mongoose").Types.ObjectId;
 const Plan = require("../../../../models/entities/plan");
+const { EntityCastError } = require("../../../../helpers/errors");
 
 describe("Plan mongoose model", () => {
 
@@ -45,5 +46,25 @@ describe("Plan mongoose model", () => {
         const data = await this.fdk_billing_instance.planModel.updatePlan(dbPlan._id.toString(), {name: "Test plan"});
         expect(data instanceof Plan).toBeTrue();
         expect(data.name).toBe("Test plan");
+    });
+
+    it("Invalid plan object error", async () => {
+        let parsingFailed = false;
+        try {
+            let planInstance = new Plan({
+                ...planFixture,
+                price: {
+                    amount: "abc"
+                },
+                id: "abc",
+                meta: ""
+            });
+        }
+        catch(err) {
+            if (err instanceof EntityCastError) {
+                parsingFailed = true;
+            }
+        }
+        expect(parsingFailed).toBeTrue();
     });
 });
