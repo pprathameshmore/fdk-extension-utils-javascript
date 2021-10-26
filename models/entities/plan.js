@@ -24,8 +24,8 @@ const planSchema = Joi.object().keys({
     price: priceSchema,
     features: Joi.array().items(Joi.string()).required(),
     interval: Joi.string().valid(...Object.values(PlanInterval)).required(),
-    created_at: Joi.string().required(),
-    updated_at: Joi.string().required(),
+    created_at: Joi.string(),
+    updated_at: Joi.string(),
     meta: Joi.object(),
 });
 
