@@ -118,7 +118,8 @@ It will update subscription status on your database by fetching latest status fr
 | is_active | boolean | True if plan is active |
 | price | [Price](#price) | Price info for plan |
 | features | [string] | List of features |
-| interval | string | If plan is for yearly subscription or monthly. Possible values 'month' or 'year' |
+| pricing_type | string | If plan is `recurring` pricing or `one_time` pricing. Default `recurring` |
+| interval | string | If plan is for yearly subscription or monthly. Possible values 'month' or 'year'. Required for `pricing_type` 'recurring' |
 | created_at | string | ISO Date string when subscription is created |
 | updated_at | string | ISO Date string when subscription is last modified |
 | meta | object | Basic javascript object |

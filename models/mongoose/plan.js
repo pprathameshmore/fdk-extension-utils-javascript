@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const BasePlanModel = require("../base-models/base_plan_model");
 const Plan = require("../entities/plan");
-const { PlanInterval } = require("../../helpers/constants");
+const { PlanInterval, PricingType } = require("../../helpers/constants");
 
 const schema = new mongoose.Schema({
     name: {
@@ -30,6 +30,11 @@ const schema = new mongoose.Schema({
         }
     },
     features: [String],
+    pricing_type: {
+        type: String,
+        default: 'recurring',
+        enums: Object.values(PricingType)
+    },
     interval: {
         type: String,
         enums: Object.values(PlanInterval)

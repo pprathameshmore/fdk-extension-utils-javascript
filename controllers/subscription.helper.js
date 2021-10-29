@@ -32,7 +32,7 @@ module.exports = (config, models) => {
                             amount: plan.price.amount,
                             currency_code: plan.price.currency
                         },
-                        pricing_type: 'recurring',
+                        pricing_type: plan.pricing_type || 'recurring',
                         recurring: {
                             interval: plan.interval
                         }

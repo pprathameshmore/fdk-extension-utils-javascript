@@ -1,6 +1,6 @@
 
 const Joi = require("joi");
-const { PlanInterval } = require("../../helpers/constants");
+const { PlanInterval, PricingType } = require("../../helpers/constants");
 const { EntityCastError } = require("../../helpers/errors");
 
 class Price {
@@ -23,6 +23,7 @@ const planSchema = Joi.object().keys({
     is_active: Joi.boolean().required(),
     price: priceSchema,
     features: Joi.array().items(Joi.string()).required(),
+    pricing_type: Joi.string().valid(...Object.values(PricingType)),
     interval: Joi.string().valid(...Object.values(PlanInterval)).required(),
     created_at: Joi.string(),
     updated_at: Joi.string(),
@@ -38,6 +39,7 @@ class Plan {
         this.is_active = obj.is_active;
         this.price = obj.price? new Price(obj.price): obj.price;
         this.features = obj.features;
+        this.pricing_type = obj.pricing_type || 'recurring';
         this.interval = obj.interval;
         this.created_at = obj.created_at instanceof Date? obj.created_at.toISOString(): obj.created_at;
         this.updated_at = obj.updated_at instanceof Date? obj.updated_at.toISOString(): obj.updated_at;

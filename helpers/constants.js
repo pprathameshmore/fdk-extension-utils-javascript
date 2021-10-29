@@ -7,7 +7,13 @@ const PlanInterval = {
     YEAR: 'year',
 }
 
+const PricingType = {
+    RECURRING: 'recurring',
+    ONE_TIME: 'one_time',
+}
+
 module.exports = {
     OrmType,
-    PlanInterval
+    PlanInterval,
+    PricingType
 }
