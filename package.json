@@ -1,0 +1,53 @@
+{
+  "name": "fdk-billing-javascript",
+  "version": "0.0.1",
+  "description": "Fynd Development Kit library to enable easy billing integration for your extension",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/nyc node spec.js"
+  },
+  "nyc": {
+    "all": true,
+    "check-coverage": false,
+    "collectCoverage": true,
+    "include": [
+      "**/*.js"
+    ],
+    "exclude": [
+      "spec/*",
+      "node_modules/*",
+      "coverage/*",
+      "spec.js",
+      "models/base-models/*"
+    ],
+    "reporter": [
+      "html",
+      "json",
+      "json-summary",
+      "text-summary"
+    ],
+    "report-dir": "./coverage"
+  },
+  "keywords": [
+    "billing",
+    "fynd",
+    "subscription",
+    "extension"
+  ],
+  "author": "regrowth@gofynd.com",
+  "license": "ISC",
+  "dependencies": {
+    "deep-extend": "^0.6.0",
+    "joi": "^17.4.2"
+  },
+  "peerDependencies": {
+    "mongoose": ">=5.11.17"
+  },
+  "devDependencies": {
+    "winston": "^3.2.1",
+    "jasmine": "^3.5.0",
+    "jasmine-console-reporter": "^3.1.0",
+    "nyc": "^15.0.1",
+    "mongoose": "^5.11.17"
+  }
+}
