@@ -100,4 +100,21 @@ describe("Setup Billing function verifications", () => {
         expect(errorMsg).toBe("`orm_type` value is invalid. Allowed values are: mongoose");
     });
 
+    it("Invalid db connection", async () => {
+        let errorMsg = "";
+        try {
+            setupBilling({
+                extension_id: "API_KEY",
+                db_connection: {},
+                collection_name: {plan: "test_plan", subscription: "test_subscription"},
+                orm_type: "mongoose"
+            })
+        }
+        catch(err) {
+            errorMsg = err.message;
+        }
+        
+        expect(errorMsg).toBe("`db_connection` object type is invalid for orm");
+    });
+
 });

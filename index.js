@@ -1,3 +1,5 @@
+const { Connection } = require("mongoose");
+const { getConnectionInstance } = require("./helpers/common");
 const { OrmType } = require("./helpers/constants");
 const Plan = require("./models/entities/plan");
 const Subscription = require("./models/entities/subscription");
@@ -23,6 +25,9 @@ function setupBilling(config) {
     }
     if (!Object.values(OrmType).includes(config.orm_type)) {
         throw Error(`\`orm_type\` value is invalid. Allowed values are: ${Object.values(OrmType).join(", ")}`);
+    }
+    if(!(config.db_connection instanceof getConnectionInstance(config.orm_type))) { 
+        throw Error("`db_connection` object type is invalid for orm");
     }
 
     const models = require("./models")(config.db_connection, config.collection_name, config.orm_type);
