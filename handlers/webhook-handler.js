@@ -7,16 +7,6 @@ class WebhookHandler {
         this.model = model;
     }
 
-    handleExtensionInstall(eventName, payload, companyId, applicationId){
-        console.log(`Event ${eventName} received for ${companyId} and ${applicationId}`);
-        console.log(payload);
-    }
-    
-    handleExtensionUninstall(eventName, payload, companyId, applicationId){
-        console.log(`Event ${eventName} received for ${companyId} and ${applicationId}`);
-        console.log(payload);
-    }
-
     async handleExtensionSubscriptionUpdate(eventName, payload, companyId) {
         let success = false;
         let message = "";
