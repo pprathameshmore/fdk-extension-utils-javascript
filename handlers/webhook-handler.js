@@ -58,8 +58,8 @@ class WebhookHandler {
     };
 }
 
-const WebhookHandler = () => new WebhookHandler(SubscriptionModel);
+const webhookHandler = () => new WebhookHandler(SubscriptionModel);
 
 module.exports = {
-    WebhookHandler
+    webhookHandler
 }
