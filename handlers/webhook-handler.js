@@ -1,7 +1,4 @@
 'use strict';
-
-const { SubscriptionModel } = require('../models/mongoose/subscription');
-
 class WebhookHandler {
     constructor(model) {
         this.model = model;
@@ -48,7 +45,7 @@ class WebhookHandler {
     };
 }
 
-const webhookHandler = () => new WebhookHandler(SubscriptionModel);
+const webhookHandler = (model) => new WebhookHandler(model);
 
 module.exports = {
     webhookHandler
