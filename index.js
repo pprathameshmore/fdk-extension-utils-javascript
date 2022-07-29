@@ -32,7 +32,8 @@ function setupBilling(config) {
 
     const models = require("./models")(config.db_connection, config.collection_name, config.orm_type);
     const { getActivePlans, subscribePlan, getActiveSubscription, updateSubscriptionStatus } = require("./controllers/subscription.helper")(config, models);
-    const { webhookHandler } = require("./handlers/webhook-handler");
+    const { WebhookHandler } = require("./handlers/webhook-handler");
+    const webhookHandler = (models) => new WebhookHandler(models);
     return {
         planModel: models.planModel,
         subscriptionModel: models.subscriptionModel,
@@ -40,7 +41,7 @@ function setupBilling(config) {
         subscribePlan, 
         getActiveSubscription, 
         updateSubscriptionStatus,
-        webhookHandler: webhookHandler(models.subscriptionModel)
+        webhookHandler: webhookHandler(models)
     }
 }
 

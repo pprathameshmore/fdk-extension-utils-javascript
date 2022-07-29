@@ -1,7 +1,7 @@
 'use strict';
 class WebhookHandler {
-    constructor(model) {
-        this.model = model;
+    constructor(models) {
+        this.model = models.subscriptionModel;
     }
 
     async handleExtensionSubscriptionUpdate(eventName, payload, companyId) {
@@ -11,11 +11,7 @@ class WebhookHandler {
         const sellerSubscription = await this.model.getSubscriptionByPlatformId(payload._id, companyId);
         const existingSubscription = await this.model.getActiveSubscription(companyId);
         if (!sellerSubscription) {
-            return {
-                success: success,
-                seller_subscription: sellerSubscription,
-                message: `Subscription not found with id ${payload._id}`
-            }
+            throw new Error(`Subscription not found with id ${payload._id}`);
         }
     
         let currentStatus = sellerSubscription.status;
@@ -37,16 +33,9 @@ class WebhookHandler {
             success = true;
             message = "Subscription is cancelled by user";
         }
-        return {
-            success: success,
-            seller_subscription: sellerSubscription,
-            message: message
-        };
     };
 }
 
-const webhookHandler = (model) => new WebhookHandler(model);
-
 module.exports = {
-    webhookHandler
+    WebhookHandler
 }
