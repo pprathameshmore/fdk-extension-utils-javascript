@@ -1,15 +1,14 @@
 'use strict';
 class WebhookHandler {
     constructor(models) {
-        this.model = models.subscriptionModel;
+        this.model = models;
     }
 
     async handleExtensionSubscriptionUpdate(eventName, payload, companyId) {
-        let success = false;
         let message = "";
         companyId = Number(companyId);
-        const sellerSubscription = await this.model.getSubscriptionByPlatformId(payload._id, companyId);
-        const existingSubscription = await this.model.getActiveSubscription(companyId);
+        const sellerSubscription = await this.model.subscriptionModel.getSubscriptionByPlatformId(payload._id, companyId);
+        const existingSubscription = await this.model.subscriptionModel.getActiveSubscription(companyId);
         if (!sellerSubscription) {
             throw new Error(`Subscription not found with id ${payload._id}`);
         }
@@ -18,19 +17,16 @@ class WebhookHandler {
         sellerSubscription.status = payload.status;
         
         if (currentStatus === 'pending' && sellerSubscription.status === 'active' ) {
-            await this.model.activateSubscription(sellerSubscription.id, sellerSubscription.platform_subscription_id);
+            await this.model.subscriptionModel.activateSubscription(sellerSubscription.id, sellerSubscription.platform_subscription_id);
             if (existingSubscription) {
-                await this.model.cancelSubscription(existingSubscription.id);
+                await this.model.subscriptionModel.cancelSubscription(existingSubscription.id);
             }
-            success = true;
             message = "Subscription activated";
         } else if (currentStatus === 'pending' && sellerSubscription.status === 'declined') {
-            await this.model.removeSubscription(sellerSubscription.id);
-            success = true;
+            await this.model.subscriptionModel.removeSubscription(sellerSubscription.id);
             message = "Subscription request is declined by user";
         } else if (currentStatus === 'active' && sellerSubscription.status === 'cancelled') {
-            await this.model.updateSubscription(sellerSubscription);
-            success = true;
+            await this.model.subscriptionModel.updateSubscription(sellerSubscription);
             message = "Subscription is cancelled by user";
         }
     };
