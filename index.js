@@ -3,6 +3,7 @@ const { getConnectionInstance } = require("./helpers/common");
 const { OrmType } = require("./helpers/constants");
 const Plan = require("./models/entities/plan");
 const Subscription = require("./models/entities/subscription");
+const { WebhookHandler } = require("./handlers/webhook-handler");
 
 function setupBilling(config) {
     if(!config) {
@@ -32,7 +33,6 @@ function setupBilling(config) {
 
     const models = require("./models")(config.db_connection, config.collection_name, config.orm_type);
     const { getActivePlans, subscribePlan, getActiveSubscription, updateSubscriptionStatus } = require("./controllers/subscription.helper")(config, models);
-    const { WebhookHandler } = require("./handlers/webhook-handler");
     const webhookHandler = new WebhookHandler(models);
     return {
         planModel: models.planModel,

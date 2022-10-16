@@ -25,7 +25,8 @@ describe("Subscription webhook handlers", () => {
             platform_subscription_id: subscriptionPayloadFixture._id
         });
 
-        const data = await this.fdk_billing_instance.webhookHandler.handleExtensionSubscriptionUpdate("extension/extension-subscription", subscriptionPayloadFixture, subscriptionFixture.company_id);
+        await this.fdk_billing_instance.webhookHandler.handleExtensionSubscriptionUpdate("extension/extension-subscription", subscriptionPayloadFixture, subscriptionFixture.company_id);
+        
         const dbSubscription = await this.fdk_billing_instance.subscriptionModel.model.findOne({});
 
         expect(dbSubscription.platform_subscription_id.toString()).toBe(subscriptionPayloadFixture._id);
@@ -42,8 +43,11 @@ describe("Subscription webhook handlers", () => {
             platform_subscription_id: subscriptionPayloadFixture._id
         });
 
-        subscriptionPayloadFixture.status = "declined";
-        const data = await this.fdk_billing_instance.webhookHandler.handleExtensionSubscriptionUpdate("extension/extension-subscription", subscriptionPayloadFixture, subscriptionFixture.company_id);
+        await this.fdk_billing_instance.webhookHandler.handleExtensionSubscriptionUpdate("extension/extension-subscription", {...subscriptionPayloadFixture, status: "declined"}, subscriptionFixture.company_id);
+        
+        const dbSubscription = await this.fdk_billing_instance.subscriptionModel.model.findOne({platform_subscription_id: subscriptionPayloadFixture._id});
+        
+        expect(dbSubscription).toBeFalsy();
     });
 
     it("Cancelled subscription status by webhook handler", async () => {
@@ -55,9 +59,7 @@ describe("Subscription webhook handlers", () => {
             platform_subscription_id: subscriptionPayloadFixture._id
         });
 
-        subscriptionPayloadFixture.status = "cancelled";
-
-        const data = await this.fdk_billing_instance.webhookHandler.handleExtensionSubscriptionUpdate("extension/extension-subscription", subscriptionPayloadFixture, subscriptionFixture.company_id);
+        await this.fdk_billing_instance.webhookHandler.handleExtensionSubscriptionUpdate("extension/extension-subscription", {...subscriptionPayloadFixture, status: "cancelled"}, subscriptionFixture.company_id);
         const dbSubscription = await this.fdk_billing_instance.subscriptionModel.model.findOne({});
 
         expect(dbSubscription.platform_subscription_id.toString()).toBe(subscriptionPayloadFixture._id);
@@ -65,7 +67,7 @@ describe("Subscription webhook handlers", () => {
         expect(dbSubscription.company_id).toBe(1);
     });
 
-    it("already existing Subscription", async () => {
+    it("Already existing Subscription", async () => {
 
         let oldSubscription =  await this.fdk_billing_instance.subscriptionModel.model.create({
             ...subscriptionFixture,
@@ -80,8 +82,7 @@ describe("Subscription webhook handlers", () => {
             platform_subscription_id: subscriptionPayloadFixture._id
         });
 
-        subscriptionPayloadFixture.status = "active";
-        const data = await this.fdk_billing_instance.webhookHandler.handleExtensionSubscriptionUpdate("extension/extension-subscription", subscriptionPayloadFixture, subscriptionFixture.company_id);
+        await this.fdk_billing_instance.webhookHandler.handleExtensionSubscriptionUpdate("extension/extension-subscription", subscriptionPayloadFixture, subscriptionFixture.company_id);
         oldSubscription = await this.fdk_billing_instance.subscriptionModel.model.findById(oldSubscription._id);
         newSubscription = await this.fdk_billing_instance.subscriptionModel.model.findOne({"status": "active"});
 
@@ -89,5 +90,16 @@ describe("Subscription webhook handlers", () => {
         expect(newSubscription.status).toBe("active");
         expect(newSubscription.platform_subscription_id.toString()).toBe(subscriptionPayloadFixture._id);
         expect(newSubscription.company_id).toBe(1);
+    });
+
+    it("Subscription not found with id", async () => {
+        let exceptionOccur = false;
+        try {
+            await this.fdk_billing_instance.webhookHandler.handleExtensionSubscriptionUpdate("extension/extension-subscription", subscriptionPayloadFixture, subscriptionFixture.company_id);
+        }
+        catch(err) {
+            exceptionOccur = true;
+        }
+        expect(exceptionOccur).toBeTrue();
     });
 });
