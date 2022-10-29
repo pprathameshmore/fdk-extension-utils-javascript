@@ -27,7 +27,7 @@ class WebhookHandler {
         
         if (currentStatus === 'pending' && sellerSubscription.status === 'active' ) {
             await WebhookHandler.instance.models.subscriptionModel.activateSubscription(sellerSubscription.id, sellerSubscription.platform_subscription_id);
-            if (existingSubscription) {
+            if (existingSubscription && existingSubscription.id.toString() !== sellerSubscription.id.toString()) {
                 await WebhookHandler.instance.models.subscriptionModel.cancelSubscription(existingSubscription.id);
             }
         } else if (currentStatus === 'pending' && sellerSubscription.status === 'declined') {
