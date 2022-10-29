@@ -1,4 +1,3 @@
-const { Connection } = require("mongoose");
 const { getConnectionInstance } = require("./helpers/common");
 const { OrmType } = require("./helpers/constants");
 const Plan = require("./models/entities/plan");
@@ -33,7 +32,7 @@ function setupBilling(config) {
 
     const models = require("./models")(config.db_connection, config.collection_name, config.orm_type);
     const { getActivePlans, subscribePlan, getActiveSubscription, updateSubscriptionStatus } = require("./controllers/subscription.helper")(config, models);
-    const webhookHandler = new WebhookHandler(models);
+    const webhookHandler = WebhookHandler.getInstance(models);
     return {
         planModel: models.planModel,
         subscriptionModel: models.subscriptionModel,
@@ -49,5 +48,6 @@ module.exports = {
     setupBilling,
     OrmType,
     Plan,
-    Subscription
+    Subscription,
+    WebhookHandler
 }

@@ -1,13 +1,22 @@
 'use strict';
 class WebhookHandler {
     constructor(models) {
-        this.model = models;
+        this.models = models;
     }
 
-    async handleExtensionSubscriptionUpdate(eventName, payload, companyId) {
+    static instance = null;
+
+    static getInstance(models) {
+        if (!WebhookHandler.instance) {
+            WebhookHandler.instance = new WebhookHandler(models);
+        }
+        return WebhookHandler.instance
+    }
+
+    static async handleExtensionSubscriptionUpdate(eventName, payload, companyId) {
         companyId = Number(companyId);
-        const sellerSubscription = await this.model.subscriptionModel.getSubscriptionByPlatformId(payload._id, companyId);
-        const existingSubscription = await this.model.subscriptionModel.getActiveSubscription(companyId);
+        const sellerSubscription = await WebhookHandler.instance.models.subscriptionModel.getSubscriptionByPlatformId(payload._id, companyId);
+        const existingSubscription = await WebhookHandler.instance.models.subscriptionModel.getActiveSubscription(companyId);
         if (!sellerSubscription) {
             throw new Error(`Subscription not found with id ${payload._id}`);
         }
@@ -16,14 +25,14 @@ class WebhookHandler {
         sellerSubscription.status = payload.status;
         
         if (currentStatus === 'pending' && sellerSubscription.status === 'active' ) {
-            await this.model.subscriptionModel.activateSubscription(sellerSubscription.id, sellerSubscription.platform_subscription_id);
+            await WebhookHandler.instance.models.subscriptionModel.activateSubscription(sellerSubscription.id, sellerSubscription.platform_subscription_id);
             if (existingSubscription) {
-                await this.model.subscriptionModel.cancelSubscription(existingSubscription.id);
+                await WebhookHandler.instance.models.subscriptionModel.cancelSubscription(existingSubscription.id);
             }
         } else if (currentStatus === 'pending' && sellerSubscription.status === 'declined') {
-            await this.model.subscriptionModel.removeSubscription(sellerSubscription.id);
+            await WebhookHandler.instance.models.subscriptionModel.removeSubscription(sellerSubscription.id);
         } else if (currentStatus === 'active' && sellerSubscription.status === 'cancelled') {
-            await this.model.subscriptionModel.updateSubscription(sellerSubscription);
+            await WebhookHandler.instance.models.subscriptionModel.updateSubscription(sellerSubscription);
         }
     };
 }
