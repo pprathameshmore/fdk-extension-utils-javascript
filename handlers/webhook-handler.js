@@ -13,8 +13,9 @@ class WebhookHandler {
         return WebhookHandler.instance
     }
 
-    static async handleExtensionSubscriptionUpdate(eventName, payload, companyId) {
+    static async handleExtensionSubscriptionUpdate(eventName, body, companyId) {
         companyId = Number(companyId);
+        const { payload } = body;
         const sellerSubscription = await WebhookHandler.instance.models.subscriptionModel.getSubscriptionByPlatformId(payload._id, companyId);
         const existingSubscription = await WebhookHandler.instance.models.subscriptionModel.getActiveSubscription(companyId);
         if (!sellerSubscription) {
