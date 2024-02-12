@@ -14,6 +14,9 @@ const schema = new mongoose.Schema({
     tagline: {
         type: String
     },
+    cluster_id: {
+        type: string
+    },
     company_id: {
         type: [Number],
         required: false
@@ -56,10 +59,11 @@ class PlanModel extends BasePlanModel {
         this.model = connection.model(collectionName, schema, collectionName);
     }
 
-    async getActivePlans(companyId) {
+    async getActivePlans(companyId, clusterId) {
         const query = { is_active: true };
-        if (companyId) {
+        if (companyId || clusterId) {
             query.company_id = companyId;
+            query.cluster_id = clusterId;
         }
         else {
             query.$or = [{"company_id": {"$exists": false}}, {"company_id": []}];

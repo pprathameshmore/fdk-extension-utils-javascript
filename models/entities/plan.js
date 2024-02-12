@@ -28,6 +28,7 @@ const planSchema = Joi.object().keys({
     created_at: Joi.string(),
     updated_at: Joi.string(),
     meta: Joi.object(),
+    cluster_id: Joi.string()
 });
 
 class Plan {
@@ -44,6 +45,7 @@ class Plan {
         this.created_at = obj.created_at instanceof Date? obj.created_at.toISOString(): obj.created_at;
         this.updated_at = obj.updated_at instanceof Date? obj.updated_at.toISOString(): obj.updated_at;
         this.meta = obj.meta;
+        this.cluster_id = obj.cluster_id;
         this.validate();
     }
     validate(){

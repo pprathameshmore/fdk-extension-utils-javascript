@@ -13,6 +13,9 @@ const schema = new Schema({
         required: true,
         immutable: true
     },
+    cluster_id: {
+        type: string
+    },
     status: {
         type: String,
         required: true,
@@ -49,8 +52,8 @@ class SubscriptionModel extends BaseSubscriptionModel{
         this.model = connection.model(collectionName, schema, collectionName);
     }
 
-    async getActiveSubscription(companyId) {
-        const dbSubscription = await this.model.findOne({ company_id: companyId, status: "active" });
+    async getActiveSubscription(companyId, clusterId) {
+        const dbSubscription = await this.model.findOne({ company_id: companyId, status: "active", cluster_id: clusterId });
         if(!dbSubscription) {
             return dbSubscription;
         }
@@ -65,17 +68,18 @@ class SubscriptionModel extends BaseSubscriptionModel{
         return new Subscription(dbSubscription.toObject());
     }
 
-    async getSubscriptionByPlatformId(platformSubscriptionId, companyId) {
-        const dbSubscription = await this.model.findOne({ platform_subscription_id: platformSubscriptionId, company_id: companyId });
+    async getSubscriptionByPlatformId(platformSubscriptionId, companyId, clusterId) {
+        const dbSubscription = await this.model.findOne({ platform_subscription_id: platformSubscriptionId, company_id: companyId, cluster_id: clusterId });
         if(!dbSubscription) {
             return dbSubscription;
         }
         return new Subscription(dbSubscription.toObject());
     }
 
-    async createSubscription(companyId, planId, platformSubscriptionId) {
+    async createSubscription(companyId, planId, platformSubscriptionId, clusterId) {
         return new Subscription (await this.model.create({
             company_id: companyId,
+            cluster_id: clusterId,
             plan_id: planId,
             status: 'pending',
             platform_subscription_id: ObjectId(platformSubscriptionId)
@@ -83,8 +87,8 @@ class SubscriptionModel extends BaseSubscriptionModel{
     }
 
     async updateSubscription(subscription) {
-        const dbSubscription = await this.model.findOne({ company_id: subscription.company_id, platform_subscription_id: ObjectId(subscription.platform_subscription_id) });
-        deepExtend(dbSubscription, omit(subscription, ["company_id", "platform_subscription_id"]));
+        const dbSubscription = await this.model.findOne({ cluster_id: subscription.clusterId, company_id: subscription.company_id, platform_subscription_id: ObjectId(subscription.platform_subscription_id) });
+        deepExtend(dbSubscription, omit(subscription, ["company_id", "platform_subscription_id", "cluster_id"]));
         await dbSubscription.save();
         return new Subscription(dbSubscription.toObject())
     }

@@ -2,16 +2,17 @@ const Joi = require("joi");
 const { EntityCastError } = require("../../helpers/errors");
 
 const subscriptionSchema = Joi.object().keys({
-    id: Joi.string().required(), 
-    company_id: Joi.number(),
-    status: Joi.string().required(), 
-    plan_id: Joi.string().required(), 
-    platform_subscription_id: Joi.string().required(), 
-    activated_on: Joi.string(), 
-    cancelled_on: Joi.string(), 
-    created_at: Joi.string().required(),
-    updated_at: Joi.string().required(),
-    meta: Joi.object(),
+  id: Joi.string().required(),
+  company_id: Joi.number(),
+  status: Joi.string().required(),
+  plan_id: Joi.string().required(),
+  platform_subscription_id: Joi.string().required(),
+  activated_on: Joi.string(),
+  cancelled_on: Joi.string(),
+  created_at: Joi.string().required(),
+  updated_at: Joi.string().required(),
+  meta: Joi.object(),
+  cluster_id: Joi.string(),
 });
 
 class Subscription {
@@ -26,6 +27,7 @@ class Subscription {
         this.created_at = obj.created_at instanceof Date? obj.created_at.toISOString(): obj.created_at;
         this.updated_at = obj.updated_at instanceof Date? obj.updated_at.toISOString(): obj.updated_at;
         this.meta = obj.meta;
+        this.cluster_id = obj.cluster_id
         this.validate();
     }
     validate() {
