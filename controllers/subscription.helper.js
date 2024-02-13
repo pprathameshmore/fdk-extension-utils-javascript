@@ -17,7 +17,7 @@ module.exports = (config, models) => {
         return sellerSubscription;
     };
 
-    async function subscribePlan(companyId, planId, platformClient, callbackUrl) {
+    async function subscribePlan(companyId, clusterId, planId, platformClient, callbackUrl) {
         companyId = Number(companyId);
         const plan = await planModel.getPlanById(planId);
         let response = await platformClient.billing.createSubscriptionCharge({
@@ -44,7 +44,8 @@ module.exports = (config, models) => {
         await subscriptionModel.createSubscription(
             companyId,
             planId,
-            response.subscription._id
+            response.subscription._id,
+            clusterId,
         );
         return {
             platform_subscription_id: response.subscription._id,
